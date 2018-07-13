@@ -5,5 +5,5 @@ mitmproxy script for dump appsee traffic
 clone respository and run:
 ```
 $ pip install mitmproxy
-$ mitmptoxy -s appsee_watcher.py
+$ mitmproxy -s appsee_watcher.py
 ```
