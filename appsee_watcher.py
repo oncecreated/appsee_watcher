@@ -7,12 +7,12 @@ session_id = uuid.uuid4().hex[:24]
 
 def response(flow: http.HTTPFlow) -> None:
     global session_id
-    
+
     # config override
     if flow.request.url.endswith(".api.appsee.com/config"):
         with open("config.json", "rb") as file:
             config = json.loads(file.read())
-
+            
             config["SessionId"] = session_id
 
             flow.response.content = json.dumps(config).encode("utf-8")
@@ -29,9 +29,12 @@ def response(flow: http.HTTPFlow) -> None:
         with open(filename, "ba") as file:
             file.write(file_data)
 
-        with open("upload_response.json", "rb") as file:
-            flow.response.content = file.read()
+        response = json.loads(flow.response.text)
 
+        if "VideoUploadPolicy" in response:
+            response["VideoUploadPolicy"] = 2
+
+        flow.response.text = json.dumps(response)
         
         session_id = uuid.uuid4().hex[:24]
 
